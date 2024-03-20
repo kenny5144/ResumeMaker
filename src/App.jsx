@@ -14,7 +14,7 @@ import {
   Formcontrol,
 } from "../src/component/Styles";
 import Education from "./Education";
-import Project from "./component/project";
+import Project from "./component/Project";
 import Skills from "./component/Skills";
 import Achievment from "./component/Achievment";
 function App() {
