@@ -1,4 +1,5 @@
 import { useState } from "react";
+import styled from "styled-components";
 import "./App.css";
 // import Achievment from "./component/Achievment";
 import Addbtn from "./component/Addbtn";
@@ -11,25 +12,25 @@ import {
   FormElem,
   Formlabel,
   Formcontrol,
-  Repeateraddbtn,
-  RepeaterRemovebtn,
-  Cols2,
-  Cols3,
 } from "../src/component/Styles";
+import Education from "./Education";
+import Project from "./component/project";
+import Skills from "./component/Skills";
+import Achievment from "./component/Achievment";
 function App() {
   const [img, setImg] = useState();
   const [message, setMessage] = useState({ Email: "", Text: "", PhoneNo: "" });
   // regex for validation
   const strRegex = /^[a-zA-Z\s]*$/; // containing only letters
   const emailRegex =
-    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const phoneRegex =
     /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
   /* supports following number formats - (123) 456-7890, (123)456-7890, 123-456-7890, 123.456.7890, 1234567890, +31636363634, 075-63546725 */
   const digitRegex = /^\d+$/;
 
   const validType = {
-    TEXT: {},
+    TEXT: "text",
     TEXT_EMP: "text_emp",
     EMAIL: "Email",
     DIGIT: "digit",
@@ -51,47 +52,46 @@ function App() {
   function handleChange(e) {
     // console.log("o", e.target.value);
     const { name, value } = e.target;
-    console.log(value);
-    if (name === validType.EMAIL) {
-      if (!emailRegex.test(value)) {
-        console.log(...user.Email);
-        console.log(user.Email);
-        setMessage({ Email: "the email is invalid" });
-      } else {
-        setMessage({ Email: "" });
-      }
-    }
-    if (name === validType.PHONENO) {
-      if (!phoneRegex.test(value)) {
-        setMessage({ PhoneNo: "the Phone number is invalid" });
-      } else {
-        setMessage({ PhoneNo: "" });
-      }
-    }
-    if (name === validType.TEXT) {
-      console.log("g", name);
+   console.log(value)
+    if (name === validType.EMAIL){
 
-      if (!strRegex.test(user.FirstName)) {
-        setMessage({ Text: "the Phone number is invalid" });
-      } else {
-        setMessage({ Text: "worked" });
-      }
+      if (!emailRegex.test(  value)) {
+        console.log(...user.Email)
+        console.log(user.Email)
+        setMessage(
+         { Email:"the email is invalid"})
+      }else {
+        setMessage(
+          { Email:""})
+      } 
+    }
+    if (name === validType.PHONENO){
+
+      if (!phoneRegex.test(value )) {
+        setMessage(
+         { PhoneNo:"the Phone number is invalid"})
+      }else {
+        setMessage(
+          { PhoneNo:""})
+      } 
+    }
+    if (name === validType.TEXT){
+      console.log("g", name)
+
+      if (!strRegex.test(  user.FirstName)) {
+        setMessage(
+         { Text:"the Phone number is invalid"})
+      }else {
+        setMessage(
+          { Text:"worked"})
+      } 
     }
     setUser((prev) => {
       return { ...prev, [name]: value };
     });
   }
-  // this is for all the other section but the begining
-  const sectionsHandlechange = (e, i, state, setState) => {
-    console.log("p", e.target);
-
-    let { name, value } = e.target;
-    let onchangeVal = [...state];
-    onchangeVal[i][name] = value;
-    setState(onchangeVal);
-  };
   // achievment states
-
+  
   const [acheivmentContent, setAcheivmentContent] = useState([
     {
       title: "",
@@ -131,18 +131,29 @@ function App() {
     },
   ]);
 
-  const AddSection = (states, setState) => {
+ 
+  const AddSection = () => {
     console.log("you have added this section ");
-    const data = [...states, states];
-    setState(data);
+    const data = [...acheivmentContent, { title: "", description: "" }];
+    setAcheivmentContent(data);
   };
-  const removeSection = (i, state, setState) => {
-    console.log("you have removed this section ");
-    const removematch = [...state];
-    removematch.splice(i, 1);
-    setState(removematch);
-  };
-
+  //  formvalidATION
+  function formValidation() {
+    console.log(user.Email);
+    if (emailRegex.test(user.Email)) {
+      setMessage({
+        Email: "Email is valid",
+      });
+    } else if (!emailRegex.test(user.Email) && user.Email !== "") {
+      setMessage({
+        Email: "Email is not  valid",
+      });
+    } else {
+      setMessage({
+        Email: "",
+      });
+    }
+  }
   function Download() {
     window.print();
   }
@@ -155,15 +166,6 @@ function App() {
     data.readAsDataURL(e.target.files[0]);
   }
   // console.log(FirstName);
-  // EXPERIENCE STORAGE STATE
-  const experienceHandlechange = (e, i) => {
-    console.log("p", e.target);
-
-    let { name, value } = e.target;
-    let onchangeVal = [...experienceContent];
-    onchangeVal[i][name] = value;
-    setExperienceContent(onchangeVal);
-  };
   return (
     <>
       {/* about page  */}
@@ -177,7 +179,7 @@ function App() {
                 <h3>about</h3>
               </Cvformrowtitle>
               <Cvformrow>
-                <Cols3>
+                <div className="cols-3">
                   <FormElem>
                     <Formlabel htmlFor="firstname ">First Name</Formlabel>
                     <Formcontrol
@@ -218,9 +220,9 @@ function App() {
                     />
                     <span className="form-text">{message.Text}</span>
                   </FormElem>
-                </Cols3>
+                </div>
 
-                <Cols3>
+                <div className="cols-3">
                   <FormElem>
                     <Formlabel>Your Image</Formlabel>
                     <Formcontrol
@@ -257,9 +259,9 @@ function App() {
                     />
                     <span className="form-text"></span>
                   </FormElem>
-                </Cols3>
+                </div>
 
-                <Cols3>
+                <div className="cols-3">
                   <FormElem>
                     <Formlabel>Email</Formlabel>
                     <Formcontrol
@@ -299,7 +301,7 @@ function App() {
                     />
                     <span className="form-text">{message.Text}</span>
                   </FormElem>
-                </Cols3>
+                </div>
               </Cvformrow>
             </OutputDivs>
             {/* acheivment  */}
@@ -308,628 +310,38 @@ function App() {
                 <h3>achievements</h3>
               </Cvformrowtitle>
 
-              {acheivmentContent.map((data, i) => {
-                return (
-                  <div key={i} className="row-separator repeater">
-                    <div className="repeater" data-repeater-list="group-a">
-                      <div data-repeater-item>
-                        <Cvformrow>
-                          <Cols2>
-                            <FormElem>
-                              <Formlabel>Title</Formlabel>
-                              <Formcontrol
-                                value={data.title}
-                                onChange={(e) => {
-                                  sectionsHandlechange(
-                                    e,
-                                    i,
-                                    acheivmentContent,
-                                    setAcheivmentContent
-                                  );
-                                }}
-                                name="title"
-                                type="text"
-                                className="form-control achieve_title"
-
-                                // onkeyup="generateCV()"
-                              />
-                              <span className="form-text"></span>
-                            </FormElem>
-                            <FormElem>
-                              <Formlabel>Description</Formlabel>
-                              <Formcontrol
-                                value={data.description}
-                                onChange={(e) => {
-                                  sectionsHandlechange(
-                                    e,
-                                    i,
-                                    acheivmentContent,
-                                    setAcheivmentContent
-                                  );
-                                }}
-                                name="description"
-                                type="text"
-                                className="form-control achieve_description"
-                                id=""
-                                // onkeyup="generateCV()"
-                              />
-                              <span className="form-text"></span>
-                            </FormElem>
-                            <RepeaterRemovebtn
-                              data-repeater-delete
-                              onClick={() => {
-                                removeSection(
-                                  i,
-                                  acheivmentContent,
-                                  setAcheivmentContent
-                                );
-                              }}
-                              type="button"
-                              
-                            >
-                              -
-                            </RepeaterRemovebtn>
-                          </Cols2>
-                        </Cvformrow>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-
-              <Repeateraddbtn
-                type="button"
-                data-repeater-create
-                value="Add"
-                onClick={() => {
-                  AddSection(acheivmentContent, setAcheivmentContent);
-                }}
-                
-              >
-                +
-              </Repeateraddbtn>
+              <Achievment acheivmentContent={acheivmentContent} setAcheivmentContent={setAcheivmentContent}/>
+              {/* {setAcheivmentContent(<Achievment removeSection={removeSection}/>)} */}
+              <Addbtn AddSection={AddSection} />
             </OutputDivs>
 
             {/* experience */}
             <OutputDivs>
-              <Cvformrowtitle>
-                <h3>experience</h3>
-              </Cvformrowtitle>
-
-              <div className="row-separator repeater">
-                <div className="repeater" data-repeater-list="group-b">
-                  <div data-repeater-item>
-                    {experienceContent.map((data, i) => {
-                      return (
-                        <Cvformrow
-                          key={i}
-                          className="cv-form-row cv-form-row-experience"
-                        >
-                          <Cols3>
-                            <FormElem>
-                              <Formlabel >
-                                Title
-                              </Formlabel >
-                              <input
-                                name="Title"
-                                type="text"
-                                value={data.Title}
-                                onChange={(e) => {
-                                  sectionsHandlechange(
-                                    e,
-                                    i,
-                                    experienceContent,
-                                    setAcheivmentContent
-                                  );
-                                }}
-                                className="form-control exp_title"
-                                id=""
-                                // onkeyup="generateCV()"
-                              />
-                              <span className="form-text"></span>
-                            </FormElem>
-                            <FormElem>
-                              <Formlabel >
-                                Company / Organization
-                              </Formlabel>
-                              <input
-                                name="Company"
-                                value={data.Company}
-                                onChange={(e) => {
-                                  sectionsHandlechange(
-                                    e,
-                                    i,
-                                    experienceContent,
-                                    setAcheivmentContent
-                                  );
-                                }}
-                                type="text"
-                                className="form-control exp_organization"
-                                id=""
-                                // onkeyup="generateCV()"
-                              />
-                              <span className="form-text"></span>
-                            </FormElem>
-                            <FormElem>
-                              <Formlabel>
-                                Location
-                              </Formlabel>
-                              <input
-                                name="Location"
-                                value={data.Location}
-                                onChange={(e) => {
-                                  sectionsHandlechange(
-                                    e,
-                                    i,
-                                    experienceContent,
-                                    setAcheivmentContent
-                                  );
-                                }}
-                                type="text"
-                                className="form-control exp_location"
-                                id=""
-                                // onkeyup="generateCV()"
-                              />
-                              <span className="form-text"></span>
-                            </FormElem>
-                          </Cols3>
-
-                          <Cols3>
-                            <FormElem>
-                              <Formlabel >
-                                Start Date
-                              </Formlabel>
-                              <input
-                                value={data.Startdate}
-                                onChange={(e) => {
-                                  sectionsHandlechange(
-                                    e,
-                                    i,
-                                    experienceContent,
-                                    setAcheivmentContent
-                                  );
-                                }}
-                                name="Startdate"
-                                type="date"
-                                className="form-control exp_start_date"
-                                id=""
-                                // onkeyup="generateCV()"
-                              />
-                              <span className="form-text"></span>
-                            </FormElem>
-                            <FormElem>
-                              <Formlabel >
-                                End Date
-                              </Formlabel>
-                              <input
-                                value={data.Enddate}
-                                onChange={(e) => {
-                                  sectionsHandlechange(
-                                    e,
-                                    i,
-                                    experienceContent,
-                                    setAcheivmentContent
-                                  );
-                                }}
-                                name="Enddate"
-                                type="date"
-                                className="form-control exp_end_date"
-                                id=""
-                                // onkeyup="generateCV()"
-                              />
-                              <span className="form-text"></span>
-                            </FormElem>
-                            <FormElem>
-                              <Formlabel>
-                                Description
-                              </Formlabel>
-                              <input
-                                value={data.Description}
-                                onChange={(e) => {
-                                  sectionsHandlechange(
-                                    e,
-                                    i,
-                                    experienceContent,
-                                    setAcheivmentContent
-                                  );
-                                }}
-                                name="Description"
-                                type="text"
-                                className="form-control exp_description"
-                                id=""
-                                // onkeyup="generateCV()"
-                              />
-                              <span className="form-text"></span>
-                            </FormElem>
-                          </Cols3>
-
-                          <RepeaterRemovebtn
-                            data-repeater-delete
-                            type="button"
-                            
-                            onClick={() =>
-                              removeSection(
-                                i,
-                                experienceContent,
-                                setExperienceContent
-                              )
-                            }
-                          >
-                            -
-                          </RepeaterRemovebtn>
-                        </Cvformrow>
-                      );
-                    })}
-                  </div>
-                </div>
-                <Repeateraddbtn
-                  type="button"
-                  data-repeater-create
-                  value="Add"
-                  onClick={() => {
-                    AddSection(educationContent, setExperienceContent);
-                  }}
-                  
-                >
-                  +
-                </Repeateraddbtn>
-              </div>
+              <Experience
+                experienceContent={experienceContent}
+                setExperienceContent={setExperienceContent}
+              />
             </OutputDivs>
 
             <OutputDivs>
-              <Cvformrowtitle >
-                <h3>education</h3>
-              </Cvformrowtitle>
-              {/* education */}
-              <div className="row-separator repeater">
-                {educationContent.map((data, i) => {
-                  return (
-                    <div
-                      key={i}
-                      className="repeater"
-                      data-repeater-list="group-c"
-                    >
-                      <div data-repeater-item>
-                        <Cvformrow>
-                          <Cols3>
-                            <FormElem>
-                              <Formlabel >
-                                School
-                              </Formlabel>
-                              <input
-                                value={data.School}
-                                onChange={(e) => {
-                                  sectionsHandlechange(
-                                    e,
-                                    i,
-                                    educationContent,
-                                    setEducationContent
-                                  );
-                                }}
-                                name="School"
-                                type="text"
-                                className="form-control edu_school"
-                                id=""
-                                // onkeyup="generateCV()"
-                              />
-                              <span className="form-text"></span>
-                            </FormElem>
-                            <FormElem>
-                              <Formlabel >
-                                Degree
-                              </Formlabel>
-                              <input
-                                value={data.Degree}
-                                onChange={(e) => {
-                                  sectionsHandlechange(
-                                    e,
-                                    i,
-                                    educationContent,
-                                    setEducationContent
-                                  );
-                                }}
-                                name="Degree"
-                                type="text"
-                                className="form-control edu_degree"
-                                id=""
-                                // onkeyup="generateCV()"
-                              />
-                              <span className="form-text"></span>
-                            </FormElem>
-                            <FormElem>
-                              <Formlabel >
-                                City
-                              </Formlabel>
-                              <input
-                                value={data.City}
-                                onChange={(e) => {
-                                  sectionsHandlechange(
-                                    e,
-                                    i,
-                                    educationContent,
-                                    setEducationContent
-                                  );
-                                }}
-                                name="City"
-                                type="text"
-                                className="form-control edu_city"
-                                id=""
-                                // onkeyup="generateCV()"
-                              />
-                              <span className="form-text"></span>
-                            </FormElem>
-                          </Cols3>
-
-                          <Cols3>
-                            <FormElem>
-                              <Formlabel >
-                                Start Date
-                              </Formlabel>
-                              <input
-                                value={data.Startdate}
-                                onChange={(e) => {
-                                  sectionsHandlechange(
-                                    e,
-                                    i,
-                                    educationContent,
-                                    setEducationContent
-                                  );
-                                }}
-                                name="Startdate"
-                                type="date"
-                                className="form-control edu_start_date"
-                                id=""
-                                // onkeyup="generateCV()"
-                              />
-                              <span className="form-text"></span>
-                            </FormElem>
-                            <FormElem>
-                              <Formlabel>
-                                Graduation Date
-                              </Formlabel>
-                              <input
-                                value={data.Graduationdate}
-                                onChange={(e) => {
-                                  sectionsHandlechange(
-                                    e,
-                                    i,
-                                    educationContent,
-                                    setEducationContent
-                                  );
-                                }}
-                                name="Graduationdate"
-                                type="date"
-                                className="form-control edu_graduation_date"
-                                id=""
-                                // onkeyup="generateCV()"
-                              />
-                              <span className="form-text"></span>
-                            </FormElem>
-                            <FormElem>
-                              <Formlabel>
-                                Description
-                              </Formlabel>
-                              <input
-                                value={data.Description}
-                                onChange={(e) => {
-                                  sectionsHandlechange(
-                                    e,
-                                    i,
-                                    educationContent,
-                                    setEducationContent
-                                  );
-                                }}
-                                name="Description"
-                                type="text"
-                                className="form-control edu_description"
-                                id=""
-                                // onkeyup="generateCV()"
-                              />
-                              <span className="form-text"></span>
-                            </FormElem>
-                          </Cols3>
-
-                          <RepeaterRemovebtn
-                            data-repeater-delete
-                            type="button"
-                            onClick={() => {
-                              removeSection(
-                                i,
-                                educationContent,
-                                setEducationContent
-                              );
-                            }}
-                            
-                          >
-                            -
-                          </RepeaterRemovebtn>
-                        </Cvformrow>
-                      </div>
-                    </div>
-                  );
-                })}
-                <Repeateraddbtn
-                  type="button"
-                  data-repeater-create
-                  value="Add"
-                  onClick={() =>
-                    AddSection(educationContent, setEducationContent)
-                  }
-                  
-                >
-                  +
-                </Repeateraddbtn>
-              </div>
+              <Education
+                educationContent={educationContent}
+                setEducationContent={setEducationContent}
+              />
             </OutputDivs>
             {/* projects  */}
             <OutputDivs>
-              <Cvformrowtitle>
-                <h3>projects</h3>
-              </Cvformrowtitle>
-              <div className="row-separator repeater">
-                {projectContent.map((data, i) => {
-                  return (
-                    <div
-                      key={i}
-                      className="repeater"
-                      data-repeater-list="group-d"
-                    >
-                      <div data-repeater-item>
-                        <Cvformrow>
-                          <Cols3>
-                            <FormElem>
-                              <Formlabel>
-                                Project Name
-                              </Formlabel>
-                              <input
-                                value={data.Title}
-                                onChange={(e) => {
-                                  sectionsHandlechange(
-                                    e,
-                                    i,
-                                    projectContent,
-                                    setProjectContent
-                                  );
-                                }}
-                                name="Title"
-                                type="text"
-                                className="form-control proj_title"
-                              />
-                              <span className="form-text"></span>
-                            </FormElem>
-                            <FormElem>
-                              <Formlabel >
-                                Project link
-                              </Formlabel>
-                              <input
-                                value={data.Projectlink}
-                                onChange={(e) => {
-                                  sectionsHandlechange(
-                                    e,
-                                    i,
-                                    projectContent,
-                                    setProjectContent
-                                  );
-                                }}
-                                name="Projectlink"
-                                type="text"
-                                className="form-control proj_link"
-                              />
-                              <span className="form-text"></span>
-                            </FormElem>
-                            <FormElem>
-                              <Formlabel >
-                                Description
-                              </Formlabel>
-                              <input
-                                value={data.Description}
-                                onChange={(e) => {
-                                  sectionsHandlechange(
-                                    e,
-                                    i,
-                                    projectContent,
-                                    setProjectContent
-                                  );
-                                }}
-                                name="Description"
-                                type="text"
-                                className="form-control proj_description"
-                              />
-                              <span className="form-text"></span>
-                            </FormElem>
-                          </Cols3>
-                          <RepeaterRemovebtn
-                            data-repeater-delete
-                            type="button"
-                            onClick={() => {
-                              removeSection(
-                                i,
-                                projectContent,
-                                setProjectContent
-                              );
-                            }}
-                            
-                          >
-                            -
-                          </RepeaterRemovebtn>
-                        </Cvformrow>
-                      </div>
-                    </div>
-                  );
-                })}
-                <Repeateraddbtn
-                  type="button"
-                  data-repeater-create
-                  value="Add"
-                  onClick={() => AddSection(projectContent, setProjectContent)}
-                  
-                >
-                  +
-                </Repeateraddbtn>
-              </div>
+              <Project
+                projectContent={projectContent}
+                setProjectContent={setProjectContent}
+              />
             </OutputDivs>
             {/* skills  */}
             <OutputDivs>
-              <Cvformrowtitle>
-                <h3>skills</h3>
-              </Cvformrowtitle>
-
-              <div >
-                {skillsContent.map((data, i) => {
-                  return (
-                    <div className="repeater" data-repeater-list="group-e">
-                      <div data-repeater-item>
-                        <Cvformrow>
-                          <FormElem>
-                            <Formlabel>
-                              Skill
-                            </Formlabel>
-                            <input
-                              value={data.Skills}
-                              onChange={(e) => {
-                                sectionsHandlechange(
-                                  e,
-                                  i,
-                                  skillsContent,
-                                  setSkillsContent
-                                );
-                              }}
-                              name="Skills"
-                              type="text"
-                              className="form-control skill"
-                            />
-                            <span className="form-text"></span>
-                          </FormElem>
-
-                          <RepeaterRemovebtn
-                            data-repeater-delete
-                            type="button"
-                            onClick={() => {
-                              removeSection(
-                                i,
-                                skillsContent,
-                                setSkillsContent
-                              );
-                            }}
-                            
-                          >
-                            -
-                          </RepeaterRemovebtn>
-                        </Cvformrow>
-                      </div>
-                    </div>
-                  );
-                })}
-                <Repeateraddbtn
-                  type="button"
-                  data-repeater-create
-                  value="Add"
-                  onClick={()=>AddSection(skillsContent,setSkillsContent)}
-                  
-                >
-                  +
-                </Repeateraddbtn>
-              </div>
+              <Skills
+                skillsContent={skillsContent}
+                setSkillsContent={setSkillsContent}
+              />
             </OutputDivs>
           </form>
         </div>
@@ -937,7 +349,7 @@ function App() {
       </section>
       {/* resume template edit  */}
       <section id="preview-sc" className="print_area">
-        <Container>
+        <div className="container">
           <div className="preview-cnt">
             <div className="preview-cnt-l bg-green text-white">
               <div className="preview-blk">
@@ -971,7 +383,7 @@ function App() {
                 <div className="preview-blk-list">
                   <div className="preview-item">
                     <span className="preview-item-val" id="phoneno_dsp">
-                      {user.Phoneno}
+                      {user.PhoneNo}
                     </span>
                   </div>
                   <div className="preview-item">
@@ -1114,11 +526,11 @@ function App() {
               </div>
             </div>
           </div>
-        </Container>
+        </div>
       </section>
 
       <section className="print-btn-sc">
-        <Container>
+        <div className="container">
           <button
             onClick={Download}
             id="download-btn"
@@ -1135,7 +547,7 @@ function App() {
               <path d="M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V160H256c-17.7 0-32-14.3-32-32V0H64zM256 0V128H384L256 0zM216 232V334.1l31-31c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-72 72c-9.4 9.4-24.6 9.4-33.9 0l-72-72c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l31 31V232c0-13.3 10.7-24 24-24s24 10.7 24 24z" />
             </svg>
           </button>
-        </Container>
+        </div>
       </section>
 
       {/* <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
